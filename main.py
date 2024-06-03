@@ -35,7 +35,7 @@ app = FastAPI()
 
 
 
-@app.post('/', response_model=ResponseScore)
+@app.post('/socrs', response_model=ResponseScore)
 def updete_score(request: ScoreModel):
     name = request.name
     status = request.status
@@ -45,16 +45,14 @@ def updete_score(request: ScoreModel):
         user = Scores(
             user_name = name
         )
-
-    score = user.score
     
     session.add(user)
     session.commit()
-    session.refresh(user)
+    score = user.score
 
     if (status == 'WIN'):
         score = score + 1
-    else:
+    elif(status == 'LOSE'):
         score = score - 1
 
     user.score = score
@@ -68,5 +66,8 @@ def updete_score(request: ScoreModel):
     
     return response
 
-
+@app.get('/top-users')
+def get_top_users():
+    top_users = session.query(Scores).order_by(Scores.score.desc()).limit(10).all()
+    return [{"name": user.user_name, "score": user.score} for user in top_users]
     
