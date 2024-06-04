@@ -15,10 +15,9 @@ class ResponseScore(BaseModel):
     score : int
 
 class users(BaseModel):
-    name : str
+    name1: str
+    name2: str
 
-class ResponseUsers(BaseModel):
-    name : str
 
 engine = create_engine('sqlite:///databse.db', connect_args={'check_same_thread': False})
 Base = declarative_base()
@@ -72,19 +71,22 @@ def updete_score(request: ScoreModel):
     return response
 
 
-@app.post('/users', response_model=ResponseUsers)
-def get_users(request:users):
-        name = request.name
-        user = Scores(
-                user_name = name)
-        session.add(user)
-        session.commit()
-
-        response = {
-        'name' : name}
+@app.post('/users')
+def create_users(request: users):
+    name1 = request.name1
+    name2 = request.name2
+    try:
+        user1 = Scores(user_name=name1)
+        user2 = Scores(user_name=name2)
         
-        return response
-
+        session.add(user1)
+        session.add(user2)
+        
+        session.commit()
+        
+        return {"message": "Users successfully created"}
+    except Exception as e:
+        session.rollback()  
 
    
      
