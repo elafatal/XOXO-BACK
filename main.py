@@ -14,6 +14,11 @@ class ResponseScore(BaseModel):
     name : str
     score : int
 
+class users(BaseModel):
+    name : str
+
+class ResponseUsers(BaseModel):
+    name : str
 
 engine = create_engine('sqlite:///databse.db', connect_args={'check_same_thread': False})
 Base = declarative_base()
@@ -66,6 +71,23 @@ def updete_score(request: ScoreModel):
     
     return response
 
+
+@app.post('/users', response_model=ResponseUsers)
+def get_users(request:users):
+        name = request.name
+        user = Scores(
+                user_name = name)
+        session.add(user)
+        session.commit()
+
+        response = {
+        'name' : name}
+        
+        return response
+
+
+   
+     
 @app.get('/top-users')
 def get_top_users():
     top_users = session.query(Scores).order_by(Scores.score.desc()).limit(10).all()
