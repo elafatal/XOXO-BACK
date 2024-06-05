@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy import create_engine
+from fastapi.middleware.cors import CORSMiddleware
 
 
 class ScoreModel(BaseModel):
@@ -37,12 +38,14 @@ Base.metadata.create_all(engine)
 
 app = FastAPI()
 origins = [ 
+     "http://localhost:*",
      "http://localhost:3000", 
-     "http://127.0.0.1:8000" # Add your front-end URL here 
+     "http://localhost:5173", 
+     "http://127.0.0.1:8000" 
  ] 
   
 app.add_middleware( 
-
+     CORSMiddleware, 
      allow_origins=origins,  # Reflect the allowed origins 
      allow_credentials=True, 
      allow_methods=["*"],  # Allows all methods 
