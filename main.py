@@ -36,6 +36,18 @@ Base.metadata.create_all(engine)
 
 
 app = FastAPI()
+origins = [ 
+     "http://localhost:3000", 
+     "http://127.0.0.1:8000" # Add your front-end URL here 
+ ] 
+  
+app.add_middleware( 
+
+     allow_origins=origins,  # Reflect the allowed origins 
+     allow_credentials=True, 
+     allow_methods=["*"],  # Allows all methods 
+     allow_headers=["*"],  # Allows all headers 
+ )
 
 
 
