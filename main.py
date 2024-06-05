@@ -15,9 +15,6 @@ class ResponseScore(BaseModel):
     name : str
     score : int
 
-class users(BaseModel):
-    name1: str
-    name2: str
 
 
 engine = create_engine('sqlite:///databse.db', connect_args={'check_same_thread': False})
@@ -39,7 +36,7 @@ Base.metadata.create_all(engine)
 app = FastAPI()
 origins = [ 
      "http://localhost:*",
-     "http://localhost:3000", 
+     "http://localhost:3000",
      "http://localhost:5173", 
      "http://127.0.0.1:8000" 
  ] 
@@ -84,24 +81,6 @@ def updete_score(request: ScoreModel):
     }
     
     return response
-
-
-@app.post('/users')
-def create_users(request: users):
-    name1 = request.name1
-    name2 = request.name2
-    try:
-        user1 = Scores(user_name=name1)
-        user2 = Scores(user_name=name2)
-        
-        session.add(user1)
-        session.add(user2)
-        
-        session.commit()
-        
-        return {"message": "Users successfully created"}
-    except Exception as e:
-        session.rollback()  
 
    
      
